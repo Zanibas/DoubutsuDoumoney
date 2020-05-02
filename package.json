@@ -1,0 +1,25 @@
+{
+  "name": "doubutsudoumoney",
+  "version": "1.0.0",
+  "description": "A Discord bot to automate reporting for Animal Crossing New Horizons",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zanibas/DoubutsuDoumoney.git"
+  },
+  "keywords": [
+    "reporting",
+    "animal",
+    "crossing",
+    "turnips"
+  ],
+  "author": "Kevin Gagan Serrano",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Zanibas/DoubutsuDoumoney/issues"
+  },
+  "homepage": "https://github.com/Zanibas/DoubutsuDoumoney#readme"
+}
