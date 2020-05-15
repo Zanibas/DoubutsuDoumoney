@@ -1,14 +1,7 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const { prefix, token } = require('./config.json');
-
-function _addPrefix(msg) {
-	return `${prefix}${msg}`;
-}
-
-function _codeStyle(msg) {
-	return '```' + msg + '```';
-}
+const { token } = require('./config.json');
+const { _addPrefix, _codeStyle } = require('./util.js');
 
 client.once('ready', () => {
 	console.log('Ready!');
