@@ -8,12 +8,17 @@ const {
 	discordToken,
 	twitterConsumerApiSecretKey,
 	discordScreenshotsChannelId,
+	discordTestingChannelId,
 } = require('./config.json');
 const { _addPrefix, _codeStyle } = require('./util.js');
 
+function getTestChannel(callback) {
+	client.channels.fetch(discordTestingChannelId).then(callback);
+}
+
 client.once('ready', () => {
 	console.log('Discord connection established.');
-	client.channels.fetch(discordScreenshotsChannelId).then(channel => channel.send('Timmy is Online!'));
+	getTestChannel(channel => channel.send('Timmy is Online!'));
 });
 
 client.on('message', message => {
@@ -28,23 +33,30 @@ client.on('message', message => {
 
 client.login(discordToken);
 
-// app.get('/webhook/twitter', (req, res) => {
-// 	const crcToken = req.query.crc_token;
-// 	if (crcToken) {
-// 		const hash = crypto.createHmac('sha256', twitterConsumerApiSecretKey).update(crcToken).digest('base64');
-// 		res.status(200);
-// 		res.send({
-// 			response_token: 'sha256' + hash,
-// 		});
-// 	} else {
-// 		res.status(400);
-// 		res.send('Error: crc_token missing from request.');
-// 	}
-// });
-//
-// app.post('/webhook/twitter', (req, res) => {
-// 	console.log(req.body);
-// 	console.log(req, res);
-// });
-//
-// app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
+app.get('/', (_, res) => {
+	getTestChannel((channel) => channel.send('main page accessed.'));
+	res.status(200);
+	res.send('Home Page');
+});
+
+app.get('/webhook/twitter', (req, res) => {
+	const crcToken = req.query.crc_token;
+	if (crcToken) {
+		const hash = crypto.createHmac('sha256', twitterConsumerApiSecretKey).update(crcToken).digest('base64');
+		res.status(200);
+		res.send({
+			response_token: 'sha256' + hash,
+		});
+	} else {
+		res.status(400);
+		res.send('Error: crc_token missing from request.');
+	}
+});
+
+app.post('/webhook/twitter', (req, res) => {
+	console.log(req.body);
+	client.channels.fetch(discordTestingChannelId).then(channel => channel.post(req.body));
+	res.send('200 OK');
+});
+
+app.listen(port, () => console.log(`App listening at http://localhost:${port}`));
