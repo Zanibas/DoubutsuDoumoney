@@ -55,7 +55,7 @@ function getTestChannel(callback) {
 
 client.once('ready', () => {
 	console.log('Discord connection established.');
-	getTestChannel(channel => channel.send('Timmy is Online!'));
+	getTestChannel(channel => channel.send('Timmy is Online at Heroku!!'));
 });
 
 client.on('message', message => {
