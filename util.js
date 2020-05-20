@@ -1,7 +1,5 @@
-const { prefix } = require('./config.json');
-
 function _addPrefix(msg) {
-	return `${prefix}${msg}`;
+	return `${process.env.PREFIX}${msg}`;
 }
 
 function _codeStyle(msg) {
