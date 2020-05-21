@@ -6,7 +6,6 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
 const { _addPrefix, _codeStyle } = require('./util.js');
-let TestingChannelId;
 
 const app = express();
 
@@ -43,13 +42,8 @@ app.get('/webhook/twitter', (req, res) => {
 
 app.post('/webhook/twitter', async (req, res) => {
 	console.log('POST /webhook/twitter accessed');
-	const channelResult = client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID);
-	const result = await channelResult;
-	console.log("-------");
-	result.send(req);
-	console.log("========");
-	client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID).then(function(channel) { channel.send('hey' + this.req); }.bind(this));
-	// getTestChannel((channel) => channel.send(this.req));
+	client.channels.get('706019126665281547').send('POST /webhook/twitter accessed');
+	client.channels.get('706019126665281547').send(req);
 	res.send('200 OK');
 });
 
