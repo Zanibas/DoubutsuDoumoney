@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
 const { _addPrefix, _codeStyle } = require('./util.js');
-let lastTweet;
+let lastTweet = 'this was unmodified';
 
 const app = express();
 
@@ -24,6 +24,12 @@ app.get('/', (_, res) => {
 	getTestChannel((channel) => channel.send('main page accessed.'));
 	res.status(200);
 	res.send('Home Page');
+});
+
+app.get('/lastTweet', (req, res) => {
+	getTestChannel((channel) => channel.send(lastTweet));
+	res.status(200);
+	res.send(lastTweet);
 });
 
 app.get('/webhook/twitter', (req, res) => {
@@ -44,7 +50,7 @@ app.get('/webhook/twitter', (req, res) => {
 app.post('/webhook/twitter', async (req, res) => {
 	console.log('POST /webhook/twitter accessed');
 	lastTweet = req;
-	getTestChannel((channel) => channel.send(lastTweet));
+	// getTestChannel((channel) => channel.send(lastTweet));
 	res.send('200 OK');
 });
 
