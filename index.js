@@ -43,8 +43,7 @@ app.get('/webhook/twitter', (req, res) => {
 
 app.post('/webhook/twitter', (req, res) => {
 	console.log('POST /webhook/twitter accessed');
-	const chan = client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID).bind(req);
-	chan.then((channel) => { channel.send(req); });
+	client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID).then(function(channel) { channel.send(this.res); }.bind(this));
 	// getTestChannel((channel) => channel.send(this.req));
 	res.send('200 OK');
 });
