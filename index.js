@@ -40,8 +40,12 @@ app.get('/webhook/twitter', (req, res) => {
 });
 
 app.post('/webhook/twitter', (req, res) => {
-	lastTweet = `https://twitter.com/CrossingFarm/status/${req.body.tweet_create_events[0].id}`;
-	getTestChannel((channel) => channel.send(lastTweet));
+	if ('tweet_create_events' in req.body && req.body.tweet_create_events.length > 0) {
+		for (const tweet in req.body.tweet_create_events) {
+			lastTweet = `https://twitter.com/CrossingFarm/status/${tweet.id_str}`;
+			getTestChannel((channel) => channel.send(lastTweet));
+		}
+	}
 	res.send('200 OK');
 });
 
