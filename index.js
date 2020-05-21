@@ -40,8 +40,17 @@ app.get('/webhook/twitter', (req, res) => {
 });
 
 app.post('/webhook/twitter', (req, res) => {
+	console.log(req.body);
+	console.log('..............');
+	console.log(req.body.tweet_create_events);
+	console.log('..............');
+	console.log('length of tweet_create_events is: ');
+	console.log(req.body.tweet_create_events.length);
 	if ('tweet_create_events' in req.body && req.body.tweet_create_events.length > 0) {
 		for (const tweet in req.body.tweet_create_events) {
+			console.log("---------");
+			console.log(tweet);
+			console.log("---------");
 			lastTweet = `https://twitter.com/CrossingFarm/status/${tweet.id_str}`;
 			getTestChannel((channel) => channel.send(lastTweet));
 		}
