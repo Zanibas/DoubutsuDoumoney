@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
 const { _addPrefix, _codeStyle } = require('./util.js');
+let lastTweet;
 
 const app = express();
 
@@ -42,8 +43,8 @@ app.get('/webhook/twitter', (req, res) => {
 
 app.post('/webhook/twitter', async (req, res) => {
 	console.log('POST /webhook/twitter accessed');
-	client.channels.get('706019126665281547').send('POST /webhook/twitter accessed');
-	client.channels.get('706019126665281547').send(req);
+	setLastTweet.then(client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID)).then((channel) => channel.send(lastTweet));
+	getTestChannel((channel) => channel.send('tweet received.'));
 	res.send('200 OK');
 });
 
@@ -51,6 +52,17 @@ app.listen(app.get('port'), () => console.log(`App listening at http://localhost
 
 function getTestChannel(callback) {
 	client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID).then(callback);
+}
+
+function setLastTweet(tweet) {
+	return new Promise((resolve, reject) => {
+		try {
+			lastTweet = tweet;
+			resolve();
+		} catch {
+			reject(Error('Unable to set tweet.'));
+		}
+	});
 }
 
 client.once('ready', () => {
