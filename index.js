@@ -26,7 +26,7 @@ app.get('/', (_, res) => {
 });
 
 app.get('/webhook/twitter', (req, res) => {
-	console.log('GET /webhook/twitter accessed');
+	getTestChannel(channel => channel.send('CRC Challenge Issued'));
 	const crcToken = req.query.crc_token;
 	if (crcToken) {
 		const hash = crypto.createHmac('sha256', process.env.TWITTER_CONSUMER_API_SECRET).update(crcToken).digest('base64');
@@ -43,14 +43,14 @@ app.get('/webhook/twitter', (req, res) => {
 app.post('/webhook/twitter', (req, res) => {
 	console.log('POST /webhook/twitter accessed');
 	console.log(req.body);
-	client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID).then(channel => channel.post(req.body));
+	client.channels.fetch(706019126665281547).then(channel => channel.post(req.body));
 	res.send('200 OK');
 });
 
 app.listen(app.get('port'), () => console.log(`App listening at http://localhost:${app.get('port')}`));
 
 function getTestChannel(callback) {
-	client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID).then(callback);
+	client.channels.fetch(706019126665281547).then(callback);
 }
 
 client.once('ready', () => {
