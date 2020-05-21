@@ -41,9 +41,12 @@ app.get('/webhook/twitter', (req, res) => {
 	}
 });
 
-app.post('/webhook/twitter', (req, res) => {
+app.post('/webhook/twitter', async (req, res) => {
 	console.log('POST /webhook/twitter accessed');
-	client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID).then(function(channel) { channel.send(this.res); }.bind(this));
+	const channelResult = client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID);
+	const result = await channelResult;
+	result.send(this.req);
+	client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID).then(function(channel) { channel.send('hey' + this.req); }.bind(this));
 	// getTestChannel((channel) => channel.send(this.req));
 	res.send('200 OK');
 });
