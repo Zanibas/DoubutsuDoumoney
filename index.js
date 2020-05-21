@@ -42,8 +42,7 @@ app.get('/webhook/twitter', (req, res) => {
 
 app.post('/webhook/twitter', (req, res) => {
 	console.log('POST /webhook/twitter accessed');
-	console.log(req, res);
-	getTestChannel(channel => channel.send(req));
+	getTestChannel(function(channel) { channel.send(req.body);}.bind(this));
 	res.send('200 OK');
 });
 
