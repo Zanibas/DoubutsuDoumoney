@@ -43,7 +43,7 @@ app.post('/webhook/twitter', (req, res) => {
 	if ('tweet_create_events' in req.body && req.body.tweet_create_events.length > 0) {
 		req.body.tweet_create_events.forEach((tweet) => {
 			lastTweet = `https://twitter.com/CrossingFarm/status/${tweet.id_str}`;
-			getTestChannel((channel) => channel.send(lastTweet));
+			getScreenshotsChannel((channel) => channel.send(lastTweet));
 		});
 	}
 	res.send('200 OK');
@@ -53,6 +53,10 @@ app.listen(app.get('port'), () => console.log(`App listening at http://localhost
 
 function getTestChannel(callback) {
 	client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID).then(callback);
+}
+
+function getScreenshotsChannel(callback) {
+	client.channels.fetch(process.env.DISCORD_SCREENSHOTS_CHANNEL_ID).then(callback);
 }
 
 client.once('ready', () => {
