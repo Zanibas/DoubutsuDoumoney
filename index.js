@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
 const { _addPrefix, _codeStyle } = require('./util.js');
+let TestingChannelId;
 
 const app = express();
 
@@ -42,7 +43,9 @@ app.get('/webhook/twitter', (req, res) => {
 
 app.post('/webhook/twitter', (req, res) => {
 	console.log('POST /webhook/twitter accessed');
-	getTestChannel((channel) => channel.send(this.req));
+	const chan = client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID).bind(req);
+	chan.then((channel) => { channel.send(req); });
+	// getTestChannel((channel) => channel.send(this.req));
 	res.send('200 OK');
 });
 
@@ -54,6 +57,7 @@ function getTestChannel(callback) {
 
 client.once('ready', () => {
 	console.log('Discord connection established.');
+
 	getTestChannel(channel => channel.send('Timmy is Online at Heroku!!'));
 });
 
