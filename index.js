@@ -3,8 +3,6 @@ const client = new Discord.Client();
 const crypto = require('crypto');
 const express = require('express');
 const bodyParser = require('body-parser');
-const session = require('express-session');
-const passport = require('passport');
 const { _addPrefix, _codeStyle } = require('./util.js');
 let lastTweet = 'this was unmodified';
 
@@ -13,12 +11,6 @@ const app = express();
 app.set('port', process.env.PORT || 3000);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(passport.initialize());
-app.use(session({
-	secret: process.env.SESSION_SECRET,
-	resave: false,
-	saveUninitialized: true,
-}));
 
 app.get('/', (_, res) => {
 	getTestChannel((channel) => channel.send('main page accessed.'));
@@ -49,6 +41,11 @@ app.get('/webhook/twitter', (req, res) => {
 
 app.post('/webhook/twitter', async (req, res) => {
 	console.log('POST /webhook/twitter accessed');
+	console.log('------------------------------');
+	console.log(req);
+	console.log('------------------------------');
+	console.log(req.body);
+	console.log('------------------------------');
 	lastTweet = req;
 	// getTestChannel((channel) => channel.send(lastTweet));
 	res.send('200 OK');
