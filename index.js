@@ -27,9 +27,9 @@ app.get('/', (_, res) => {
 });
 
 app.get('/lastTweet', (req, res) => {
-	getTestChannel((channel) => channel.send(lastTweet.toString()));
+	getTestChannel((channel) => channel.send(JSON.stringify(lastTweet)));
 	res.status(200);
-	res.send(lastTweet.toString());
+	res.send(JSON.stringify(lastTweet));
 });
 
 app.get('/webhook/twitter', (req, res) => {
