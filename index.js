@@ -43,7 +43,7 @@ app.get('/webhook/twitter', (req, res) => {
 
 app.post('/webhook/twitter', async (req, res) => {
 	console.log('POST /webhook/twitter accessed');
-	setLastTweet.then(client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID)).then((channel) => channel.send(lastTweet));
+	setLastTweet(req).then(client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID)).then((channel) => channel.send(lastTweet));
 	getTestChannel((channel) => channel.send('tweet received.'));
 	res.send('200 OK');
 });
