@@ -43,14 +43,14 @@ app.get('/webhook/twitter', (req, res) => {
 app.post('/webhook/twitter', (req, res) => {
 	console.log('POST /webhook/twitter accessed');
 	console.log(req.body);
-	client.channels.fetch(706019126665281547).then(channel => channel.post(req.body));
+	getTestChannel(channel => channel.post(req.body));
 	res.send('200 OK');
 });
 
 app.listen(app.get('port'), () => console.log(`App listening at http://localhost:${app.get('port')}`));
 
 function getTestChannel(callback) {
-	client.channels.fetch(706019126665281547).then(callback);
+	client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID).then(callback);
 }
 
 client.once('ready', () => {
