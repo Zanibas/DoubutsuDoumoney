@@ -43,8 +43,8 @@ app.get('/webhook/twitter', (req, res) => {
 
 app.post('/webhook/twitter', async (req, res) => {
 	console.log('POST /webhook/twitter accessed');
-	setLastTweet(req).then(client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID)).then((channel) => channel.send(lastTweet));
-	getTestChannel((channel) => channel.send('tweet received.'));
+	lastTweet = req;
+	getTestChannel((channel) => channel.send(lastTweet));
 	res.send('200 OK');
 });
 
@@ -52,17 +52,6 @@ app.listen(app.get('port'), () => console.log(`App listening at http://localhost
 
 function getTestChannel(callback) {
 	client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID).then(callback);
-}
-
-function setLastTweet(tweet) {
-	return new Promise((resolve, reject) => {
-		try {
-			lastTweet = tweet;
-			resolve();
-		} catch {
-			reject(Error('Unable to set tweet.'));
-		}
-	});
 }
 
 client.once('ready', () => {
