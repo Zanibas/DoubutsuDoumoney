@@ -12,20 +12,23 @@ app.set('port', process.env.PORT || 3000);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
+// Root directory is just a test for now.
 app.get('/', (_, res) => {
 	getTestChannel((channel) => channel.send('main page accessed.'));
 	res.status(200);
 	res.send('Home Page');
 });
 
-app.get('/lastTweet', (req, res) => {
-	getTestChannel((channel) => channel.send(JSON.stringify(lastTweet)));
-	res.status(200);
-	res.send(JSON.stringify(lastTweet));
-});
-
+// In order to ensure our webhook stays active from Twitter, the app must accept requests from this route every 24 hours and respond to a CRC Challenge.
+// https://developer.twitter.com/en/docs/accounts-and-users/subscribe-account-activity/guides/securing-webhooks
 app.get('/webhook/twitter', (req, res) => {
+	// Alerts us in the discord testing channel that the CRC Challenge was received.
 	getTestChannel(channel => channel.send('CRC Challenge Issued'));
+
+	// The actual code to secure the webhooks, courtesy of Twitter's example app:
+	// https://github.com/twitterdev/account-activity-dashboard/blob/master/helpers/security.js
+	// https://github.com/twitterdev/account-activity-dashboard/blob/master/app.js#L41
 	const crcToken = req.query.crc_token;
 	if (crcToken) {
 		const hash = crypto.createHmac('sha256', process.env.TWITTER_CONSUMER_API_SECRET).update(crcToken).digest('base64');
@@ -39,8 +42,12 @@ app.get('/webhook/twitter', (req, res) => {
 	}
 });
 
+// Route that actually listens to the webhook. Twitter sends us updates whenever a Tweet is posted from https://twitter.com/crossingfarm
 app.post('/webhook/twitter', (req, res) => {
+	// Only listen for events that are a result of tweeting. Currently Account Activity webhooks send ALL account activity with no way to config.
+	// https://developer.twitter.com/en/products/accounts-and-users/account-activity-api
 	if ('tweet_create_events' in req.body && req.body.tweet_create_events.length > 0) {
+		// We only need the id of the tweet in order to link to the tweet itself. Discord does a great job at creating rich previews just from this.
 		req.body.tweet_create_events.forEach((tweet) => {
 			lastTweet = `https://twitter.com/CrossingFarm/status/${tweet.id_str}`;
 			getScreenshotsChannel((channel) => channel.send(lastTweet));
@@ -49,8 +56,11 @@ app.post('/webhook/twitter', (req, res) => {
 	res.send('200 OK');
 });
 
+// Begins the port connection for express.
 app.listen(app.get('port'), () => console.log(`App listening at http://localhost:${app.get('port')}`));
 
+
+// Two function helpers to retrieve the current testing and screenshot channels from Discord.
 function getTestChannel(callback) {
 	client.channels.fetch(process.env.DISCORD_TESTING_CHANNEL_ID).then(callback);
 }
@@ -65,6 +75,7 @@ client.once('ready', () => {
 	getTestChannel(channel => channel.send('Timmy is Online at Heroku!!'));
 });
 
+// Basic chat functionality for TimmyBot on Discord.
 client.on('message', message => {
 	if (message.content === _addPrefix('welcome')) {
 		// send back "Pong." to the channel the message was sent in
