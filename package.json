@@ -31,7 +31,8 @@
     "express-session": "^1.17.1",
     "node-fetch": "^2.6.0",
     "passport": "^0.4.1",
-    "passport-twitter": "^1.0.4"
+    "passport-twitter": "^1.0.4",
+    "lodash": ">=4.17.19"
   },
   "engines": {
     "node": "12.x"
