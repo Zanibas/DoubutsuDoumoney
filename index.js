@@ -18,6 +18,12 @@ app.get('/', (_, res) => {
 	res.send('Home Page');
 });
 
+app.get('/lastTweet', (req, res) => {
+	getTestChannel((channel) => channel.send(JSON.stringify(lastTweet)));
+	res.status(200);
+	res.send(JSON.stringify(lastTweet));
+});
+
 app.get('/webhook/twitter', (req, res) => {
 	getTestChannel(channel => channel.send('CRC Challenge Issued'));
 	const crcToken = req.query.crc_token;
